@@ -12,16 +12,19 @@ import Parse
 
 class pictureTableViewCell: UITableViewCell {   
     
+    @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var pictureView: UIImageView!
+    
     
     var picture: PFObject! {
         didSet {
-            //captionLabel.text = picture.objectForKey("caption") as? String
-            let img = picture.objectForKey("media") as? PFFile
+            captionLabel.text = picture.objectForKey("caption") as? String
+            let img = picture.objectForKey("post") as? PFFile
             img!.getDataInBackgroundWithBlock( {
                 (imageData: NSData?, error: NSError?) -> Void in
                 if (error == nil) {
-                    //let image = UIImage(data: imageData!)
-                    //self.pictureView.image = image
+                    let image = UIImage(data: imageData!)
+                    self.pictureView.image = image
                 }
             })
         }
