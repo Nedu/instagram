@@ -14,20 +14,15 @@ import ParseUI
 class pictureTableViewCell: UITableViewCell {   
     
     @IBOutlet weak var captionLabel: UILabel!
-    @IBOutlet weak var pictureView: UIImageView!
+    @IBOutlet weak var pictureView: PFImageView!
+        
     
-    
-    var picture: PFObject! {
+    var upload: PFObject! {
         didSet {
-            self.captionLabel.text = picture["caption"] as! String?
-            let img = picture.objectForKey("media") as? PFFile
-            img!.getDataInBackgroundWithBlock( {
-                (imageData: NSData?, error: NSError?) -> Void in
-                if (error == nil) {
-                    let image = UIImage(data: imageData!)
-                    self.pictureView.image = image
-                }
-            })
+            self.captionLabel.text = upload["caption"] as! String?
+            let picture = upload["picture"] as! PFObject
+            self.pictureView.file = upload["image"] as? PFFile
+            self.pictureView.loadInBackground()
         }
     }
     

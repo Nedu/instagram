@@ -9,10 +9,13 @@
 import UIKit
 import Parse
 
+let userDidLogoutNotification = "userDidLogoutNotification"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var storyboard = UIStoryboard(name: "Main", bundle: nil)
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -26,19 +29,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         )
         
-        if PFUser.currentUser() != nil {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewControllerWithIdentifier("InstagramNavigationController")
-            self.window?.rootViewController = vc
-        }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "userDidLogout", name: userDidLogoutNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserverForName("userDidLogout", object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateInitialViewController()
-            self.window?.rootViewController = vc
+        if let currentUser = PFUser.currentUser() {
+            print("Logged in user detected: \(currentUser.username!)")
+            
+            let vc = storyboard.instantiateViewControllerWithIdentifier("tabBarController") as
+            UIViewController
+            window?.rootViewController = vc
+            
+        } else {
+            print("No loggedin user detected")
         }
+
         
         return true
+    }
+    
+    func userDidLogout() {
+        let vc = storyboard.instantiateInitialViewController()! as UIViewController
+        window?.rootViewController = vc
     }
 
     func applicationWillResignActive(application: UIApplication) {

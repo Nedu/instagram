@@ -7,14 +7,13 @@
 //
 
 import UIKit
+import Parse
 
 class UploadViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    @IBOutlet weak var uploadImageView: UIImageView!
     @IBOutlet weak var captionField: UITextField!
+    @IBOutlet weak var pictureView: UIImageView!
     
-    
-    var image: UIImage!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,35 +26,86 @@ class UploadViewController: UIViewController, UIImagePickerControllerDelegate, U
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func choosePressed(sender: AnyObject) {
+
+    @IBAction func takePhoto(sender: AnyObject) {
         let cameraSource = UIImagePickerController.isSourceTypeAvailable(.Camera)
+        
         let sourceType = cameraSource ? UIImagePickerControllerSourceType.Camera : UIImagePickerControllerSourceType.PhotoLibrary
-        let vc = UIImagePickerController()
-        vc.delegate = self
-        vc.allowsEditing = true
-        vc.sourceType = sourceType
-        self.presentViewController(vc, animated: true, completion: nil)
+        
+        let viewController = UIImagePickerController()
+        viewController.delegate = self
+        viewController.sourceType = sourceType
+        
+        self.presentViewController(viewController, animated: true, completion: nil)
+    }
+    
+    
+    @IBAction func selectPhoto(sender: UIButton) {
+        let picker = UIImagePickerController ()
+        picker.delegate = self
+        picker.sourceType = .PhotoLibrary
+        
+        self.presentViewController(picker, animated: true, completion: nil)
+        
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]){
+        
+    picker .dismissViewControllerAnimated(true, completion: nil)
+        pictureView.image=info[UIImagePickerControllerOriginalImage] as? UIImage
+        
+        
     }
 
-    @IBAction func cancelPressed(sender: AnyObject) {
-        navigationController?.dismissViewControllerAnimated(true, completion: nil)
+    
+    @IBAction func onUpload(sender: AnyObject) {
+    
+        let currentUser = PFUser.currentUser()
+        
+        let scaledImage = self.resize( self.pictureView.image!, newSize: CGSizeMake(750, 750))
+        let imageData = UIImageJPEGRepresentation(scaledImage, 0)
+        let imageFile = PFFile(name:"image.jpg", data:imageData!)
+        let picture = PFObject(className: "Picture")
+        picture["image"] = imageFile
+        
+        let post = PFObject(className: "Post")
+        post["user"] = currentUser
+        post["picture"] = picture
+        post["caption"] = self.captionField.text
+        post.saveInBackgroundWithBlock
+            { (success: Bool, error: NSError?) -> Void in
+                if let error = error
+                {
+                    print("Error saving post: \(error.description)")
+                } else
+                {
+                    print("Post saved successfully")
+                    self.tabBarController!.selectedIndex = 0
+                }
+        }
+        
+        captionField.text = ""
+        pictureView.image = nil
+        
     }
     
     
-    @IBAction func uploadPressed(sender: AnyObject) {
-        Post.postUserImage(image, withCaption: captionField.text, withCompletion: nil)
-        navigationController?.dismissViewControllerAnimated(true, completion: nil)
+    func resize(image: UIImage, newSize: CGSize) -> UIImage {
+        let resizeImageView = UIImageView(frame: CGRectMake(0, 0, newSize.width, newSize.height))
+        resizeImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        resizeImageView.image = image
+        
+        UIGraphicsBeginImageContext(resizeImageView.frame.size)
+        resizeImageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
     }
-    
-    func imagePickerController(picker: UIImagePickerController,
-        didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-            image = info[UIImagePickerControllerOriginalImage] as! UIImage
-            uploadImageView.image = image
-            dismissViewControllerAnimated(true, completion: nil)
-    }
+
     
     
-    /*
+    
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -63,6 +113,6 @@ class UploadViewController: UIViewController, UIImagePickerControllerDelegate, U
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
+
 
 }

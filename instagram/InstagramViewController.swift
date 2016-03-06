@@ -12,12 +12,11 @@ import Parse
 class InstagramViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     
-   
     
     
     @IBOutlet weak var tableView: UITableView!
     
-     var pictures: [PFObject]!
+     var upload: [PFObject]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,17 +25,32 @@ class InstagramViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.dataSource = self
         tableView.estimatedRowHeight = 100
         tableView.rowHeight = UITableViewAutomaticDimension
-        
+        tableView.separatorStyle = .None
+
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        let currentUser = PFUser.currentUser()
         let query = PFQuery(className: "Post")
+        query.whereKey("user", equalTo: currentUser!)
         query.orderByDescending("createdAt")
         query.includeKey("picture")
         query.limit = 20
-        query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
-            if let posts = posts {
-                self.pictures = posts
-                self.tableView.reloadData()
+        query.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
+            if let error = error {
+                print("Error: \(error)")
             } else {
+                if let results = results {
+                    
+                    self.upload = results
+                    
+                    print("Successfully retrieved \(results.count) posts")
+                    self.tableView.reloadData()
+                    self.tableView.separatorStyle = .None
+                } else {
+                    print("No results returned")
             }
+        }
         }
 
         // Do any additional setup after loading the view.
@@ -48,48 +62,29 @@ class InstagramViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("pictureCell", forIndexPath: indexPath) as! pictureTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("HomeCell", forIndexPath: indexPath) as! pictureTableViewCell
         
-        cell.picture = pictures[indexPath.row]
+        cell.upload = upload[indexPath.row]
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if pictures != nil {
-            if pictures.count < 20 {
-                return pictures.count
-            } else {
-                return 20
-            }
+        if self.upload != nil {
+                return (self.upload?.count)!
         } else {
             return 0
         }
     }
     
-    @IBAction func uploadPressed(sender: AnyObject) {
-                
-        let query = PFQuery(className: "Post")
-        query.orderByDescending("createdAt")
-        query.includeKey("picture")
-        query.limit = 20
-        query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
-            if let posts = posts {
-                self.pictures = posts
-                self.tableView.reloadData()
-            } else {
-                // handle error
-            }
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            
         }
+    }
     
-    }
 
-    @IBAction func logoutClicked(sender: AnyObject) {
-        
-        PFUser.logOut()
-        NSNotificationCenter.defaultCenter().postNotificationName("UserDidLogout", object: nil)
-        navigationController?.dismissViewControllerAnimated(true, completion: nil)
-    }
-    /*
+    
+       /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation

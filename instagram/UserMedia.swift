@@ -9,16 +9,16 @@
 import UIKit
 import Parse
 
-class Post: NSObject {
+class UserMedia: NSObject {
     
     class func postUserImage(image: UIImage?, withCaption caption: String?, withCompletion completion: PFBooleanResultBlock?) {
-        let post = PFObject(className: "Post")
-        post["media"] = getPFFileFromImage(image)
-        post["author"] = PFUser.currentUser() 
-        post["caption"] = caption
-        post["likesCount"] = 0
-        post["commentsCount"] = 0
-        post.saveInBackgroundWithBlock(completion)
+        let media = PFObject(className: "UserMedia")
+        media["media"] = getPFFileFromImage(image)
+        media["author"] = PFUser.currentUser()
+        media["caption"] = caption
+        media["likesCount"] = 0
+        media["commentsCount"] = 0
+        media.saveInBackgroundWithBlock(completion)
     }
     
     class func getPFFileFromImage(image: UIImage?) -> PFFile? {

@@ -14,9 +14,16 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var signedUpLabel: UILabel!
+    @IBOutlet weak var usernameInvalidLabel: UILabel!
+    @IBOutlet weak var invalidLabel: UILabel!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.signedUpLabel.hidden = true
+        self.invalidLabel.hidden = true
+        self.usernameInvalidLabel.hidden = true
 
     }
 
@@ -26,13 +33,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func onSignIn(sender: AnyObject) {
-        PFUser.logInWithUsernameInBackground(usernameField.text!, password: passwordField.text!) { (user: PFUser?, error: NSError?) -> Void in
-            if user != nil {
-                print("you're logged in")
-                
-                self.performSegueWithIdentifier("loginSegue", sender: nil)
-            }
-        }
+        login()
     }
 
     
@@ -46,9 +47,8 @@ class LoginViewController: UIViewController {
             if success {
                 print("Yay, created a user!")
                 
-                self.performSegueWithIdentifier("loginSegue", sender: nil)
+                self.signedUpLabel.hidden = false
             } else {
-                print(error?.localizedDescription)
                 if error?.code == 202 {
                     print("Username is taken")
                 }
@@ -67,3 +67,51 @@ class LoginViewController: UIViewController {
     */
 
 }
+
+extension LoginViewController: UITextFieldDelegate{
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == usernameField {
+            passwordField.becomeFirstResponder()
+        }
+        else if textField == passwordField {
+            passwordField.resignFirstResponder()
+            login()
+        }
+        return true
+    }
+    
+}
+
+private extension LoginViewController {
+    func login()
+    {
+        PFUser.logInWithUsernameInBackground(usernameField.text!, password: passwordField.text!) { (user: PFUser?, error:NSError?) -> Void in
+            if user != nil {
+                self.invalidLabel.hidden = true
+                self.usernameInvalidLabel.hidden = true
+                print("You're logged in")
+                self.performSegueWithIdentifier("loginSegue", sender: nil)
+            }
+            else if(error?.code == 101)
+            {
+                self.invalidLabel.hidden = false
+                self.usernameInvalidLabel.hidden = true
+            }
+            else if(error?.code == 200)
+            {
+                self.usernameInvalidLabel.text = "Username is Required!"
+                self.usernameInvalidLabel.hidden = false
+            }
+            else if(error?.code == 201)
+            {
+                self.usernameInvalidLabel.text = "Password is Required!"
+                self.usernameInvalidLabel.hidden = false
+            }
+            
+            
+        }
+        
+}
+}
+
