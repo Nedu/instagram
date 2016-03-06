@@ -67,7 +67,7 @@ class InstagramViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     @IBAction func uploadPressed(sender: AnyObject) {
-        
+                
         let query = PFQuery(className: "Post")
         query.orderByDescending("createdAt")
         query.includeKey("picture")
@@ -87,6 +87,7 @@ class InstagramViewController: UIViewController, UITableViewDelegate, UITableVie
         
         PFUser.logOut()
         NSNotificationCenter.defaultCenter().postNotificationName("UserDidLogout", object: nil)
+        navigationController?.dismissViewControllerAnimated(true, completion: nil)
     }
     /*
     // MARK: - Navigation

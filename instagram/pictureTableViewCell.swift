@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import ParseUI
 
 
 class pictureTableViewCell: UITableViewCell {   
@@ -18,8 +19,8 @@ class pictureTableViewCell: UITableViewCell {
     
     var picture: PFObject! {
         didSet {
-            captionLabel.text = picture.objectForKey("caption") as? String
-            let img = picture.objectForKey("post") as? PFFile
+            self.captionLabel.text = picture["caption"] as! String?
+            let img = picture.objectForKey("media") as? PFFile
             img!.getDataInBackgroundWithBlock( {
                 (imageData: NSData?, error: NSError?) -> Void in
                 if (error == nil) {

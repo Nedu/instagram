@@ -28,10 +28,12 @@ class UploadViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
     
     @IBAction func choosePressed(sender: AnyObject) {
+        let cameraSource = UIImagePickerController.isSourceTypeAvailable(.Camera)
+        let sourceType = cameraSource ? UIImagePickerControllerSourceType.Camera : UIImagePickerControllerSourceType.PhotoLibrary
         let vc = UIImagePickerController()
         vc.delegate = self
         vc.allowsEditing = true
-        vc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        vc.sourceType = sourceType
         self.presentViewController(vc, animated: true, completion: nil)
     }
 
