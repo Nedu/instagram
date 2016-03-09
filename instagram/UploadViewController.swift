@@ -14,9 +14,13 @@ class UploadViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBOutlet weak var captionField: UITextField!
     @IBOutlet weak var pictureView: UIImageView!
     
+    let vc = UIImagePickerController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        vc.delegate = self
+        vc.allowsEditing = true
+        vc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
 
         // Do any additional setup after loading the view.
     }
@@ -51,7 +55,7 @@ class UploadViewController: UIViewController, UIImagePickerControllerDelegate, U
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]){
         
-    picker .dismissViewControllerAnimated(true, completion: nil)
+    picker.dismissViewControllerAnimated(true, completion: nil)
         pictureView.image=info[UIImagePickerControllerOriginalImage] as? UIImage
         
         
@@ -61,7 +65,6 @@ class UploadViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBAction func onUpload(sender: AnyObject) {
     
         let currentUser = PFUser.currentUser()
-        
         let scaledImage = self.resize( self.pictureView.image!, newSize: CGSizeMake(750, 750))
         let imageData = UIImageJPEGRepresentation(scaledImage, 0)
         let imageFile = PFFile(name:"image.jpg", data:imageData!)

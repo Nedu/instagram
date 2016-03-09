@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
@@ -58,7 +57,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Congats! you signed up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ucG-gx-yNn">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Congrats! you signed up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ucG-gx-yNn">
                                 <rect key="frame" x="158" y="270" width="143" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -127,18 +126,18 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Caption" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X9O-MT-AXD">
                                                     <rect key="frame" x="0.0" y="310" width="375" height="44"/>
                                                     <color key="backgroundColor" red="0.32619867879999997" green="0.77569550440000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="X9O-MT-AXD" secondAttribute="height" multiplier="375:44" id="Ae5-cB-HFY"/>
-                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="X9O-MT-AXD" firstAttribute="leading" secondItem="fmQ-sL-VtC" secondAttribute="leading" id="4Hf-vk-x11"/>
                                                 <constraint firstItem="3iI-Ww-Ny4" firstAttribute="trailing" secondItem="X9O-MT-AXD" secondAttribute="trailing" id="MvH-Fh-VkQ"/>
+                                                <constraint firstAttribute="trailing" secondItem="X9O-MT-AXD" secondAttribute="trailing" id="a8b-kj-PCg"/>
                                                 <constraint firstItem="3iI-Ww-Ny4" firstAttribute="leading" secondItem="X9O-MT-AXD" secondAttribute="leading" id="chN-1x-6Lk"/>
                                                 <constraint firstItem="3iI-Ww-Ny4" firstAttribute="top" secondItem="fmQ-sL-VtC" secondAttribute="top" id="nCr-bQ-7UY"/>
+                                                <constraint firstAttribute="bottom" secondItem="X9O-MT-AXD" secondAttribute="bottom" constant="75" id="o9C-j7-GlH"/>
                                                 <constraint firstItem="3iI-Ww-Ny4" firstAttribute="leading" secondItem="fmQ-sL-VtC" secondAttribute="leading" id="p8D-ag-cvT"/>
                                                 <constraint firstItem="X9O-MT-AXD" firstAttribute="top" secondItem="3iI-Ww-Ny4" secondAttribute="bottom" id="yis-VF-jzV"/>
                                             </constraints>

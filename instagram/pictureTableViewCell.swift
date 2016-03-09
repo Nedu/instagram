@@ -19,11 +19,12 @@ class pictureTableViewCell: UITableViewCell {
     
     var upload: PFObject! {
         didSet {
-            self.captionLabel.text = upload["caption"] as! String?
+            self.captionLabel.text = upload["caption"] as? String
             let picture = upload["picture"] as! PFObject
-            self.pictureView.file = upload["image"] as? PFFile
+            self.pictureView.file = picture["image"] as? PFFile
             self.pictureView.loadInBackground()
-        }
+        
+    }
     }
     
     

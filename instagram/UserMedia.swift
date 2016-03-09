@@ -9,6 +9,7 @@
 import UIKit
 import Parse
 
+
 class UserMedia: NSObject {
     
     class func postUserImage(image: UIImage?, withCaption caption: String?, withCompletion completion: PFBooleanResultBlock?) {
